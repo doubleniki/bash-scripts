@@ -1,5 +1,5 @@
+#!/bin/bash
 # Author: Nikita Saltykov
-# My git functions
 
 gall() {
   git add . #Add all changed files
@@ -35,7 +35,9 @@ ginit() {
   echo "Please enter the name of the main branch you want to create:"
   read branch_name
 
-  git branch -m ${branch_name:-main}
+  branch_name=${branch_name:-main}
+
+  git branch -m $branch_name
   git add .
   git commit -m "Initial commit"
 
@@ -49,4 +51,5 @@ ginit() {
   fi
 
   git add remote origin $remote_link
+  git push origin HEAD
 }
