@@ -1,4 +1,3 @@
-#!/bin/bash
 # Author: Nikita Saltykov
 
 gall() {
