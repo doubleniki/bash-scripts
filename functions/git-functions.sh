@@ -10,14 +10,19 @@ gall() {
 gcfg() {
   if [ $# -eq 0 ] #If no arguments are provided
   then
-    echo "Please provide a name and email"
-  elif [ "$#" = "--G" ] #If --G is provided, set global config
+    echo "Please provide a name"
+    read name
+    echo "Please provide an email"
+    read email
+  fi
+
+  if [ "$#" = "--G" ] #If --G is provided, set global config
   then
-    git config --global user.name "$1"
-    git config --global user.email "$2"
+    git config --global user.name "${1:-$name}"
+    git config --global user.email "${2:-$email}"
   else
-    git config user.name "$1"
-    git config user.email "$2"
+    git config user.name "${1:-$name}"
+    git config user.email "${2:-$email}"
   fi
 }
 
