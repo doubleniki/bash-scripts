@@ -6,6 +6,12 @@ ask_about_creds() {
   echo "Please enter your email:"
   read email
 
+  if [ -z "$name" ] || [ -z "$email" ] #If name or email is not provided
+  then
+    echo "Name or email is not provided. Exiting..."
+    exit 1
+  fi
+
   # return $name $email
   return "$name $email"
 }
