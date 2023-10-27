@@ -1,5 +1,15 @@
 # Author: Nikita Saltykov
 
+ask_about_creds() {
+  echo "Please enter your name:"
+  read name
+  echo "Please enter your email:"
+  read email
+
+  # return $name $email
+  return "$name $email"
+}
+
 gall() {
   git add . #Add all changed files
   message="${1:-Update}" #If commit message is not provided, use "Update"
@@ -10,10 +20,9 @@ gall() {
 gcfg() {
   if [ $# -eq 0 ] #If no arguments are provided
   then
-    echo "Please provide a name"
-    read name
-    echo "Please provide an email"
-    read email
+    credentials=$(ask_about_creds) #Ask about credentials
+    name=$(echo $credentials | cut -d " " -f 1) #Get name
+    email=$(echo $credentials | cut -d " " -f 2) #Get email
   fi
 
   if [ "$#" = "--G" ] #If --G is provided, set global config
