@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Author: Nikita Saltykov
 
 # enable the "errexit" option

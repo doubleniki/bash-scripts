@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Author: Nikita Saltykov
 
 # enable the "errexit" option
@@ -29,6 +29,12 @@ fi
 
 # find bash-scripts dir
 BASH_SCRIPTS_DIR=$(find $HOME -maxdepth 1 -name ".bash-scripts" | head -n 1)
+
+# check if bash-scripts dir exists
+if ! folder_exists $BASH_SCRIPTS_DIR; then
+  echo "bash-scripts dir does not exist. Exiting..."
+  exit 1
+fi
 
 cd $BASH_SCRIPTS_DIR
 
