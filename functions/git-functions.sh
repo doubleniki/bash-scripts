@@ -18,8 +18,16 @@ ask_about_creds() {
 
 gall() {
   git add . #Add all changed files
-  message="${1:-Update}" #If commit message is not provided, use "Update"
-  git commit -m "$message" #Commit with message
+
+  # check if -m flag is provided
+  if [ "$1" = "--amend" ]
+  then
+    git commit --amend --no-edit #Amend commit
+  else
+    message="${1:-Update}" #If commit message is not provided, use "Update"
+    git commit -m "$message" #Commit with message
+  fi
+
   git push origin HEAD #Push to origin
 }
 

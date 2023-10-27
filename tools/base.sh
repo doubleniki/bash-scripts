@@ -1,6 +1,3 @@
-#!/bin/sh
-# Author: Nikita Saltykov
-
 # enable the "errexit" option
 set -e
 

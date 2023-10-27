@@ -16,7 +16,7 @@ find_tb_scripts_path() {
   fi
 
   # return the path
-  return "$path"
+  echo "$path"
 }
 
 find_cmd_script_by_path() {
@@ -40,7 +40,7 @@ find_cmd_script_by_path() {
   fi
 
   # return the script
-  return "$script"
+  echo "$script"
 }
 
 create_shortcut() {
