@@ -21,13 +21,26 @@ REPO=${REPO:-doubleniki/bash-scripts}
 REMOTE=${REMOTE:-https://github.com/${REPO}.git}
 BRANCH=${BRANCH:-master}
 
-# find a bash config file based on the shell
+# check what shell is used
 if [ -n "$ZSH_VERSION" ]; then
-  BASH_CFG=$HOME/.zshrc
+  SHELL="zsh"
 elif [ -n "$BASH_VERSION" ]; then
-  BASH_CFG=$HOME/.bashrc
+  SHELL="bash"
 else
   echo "Unknown shell. Exiting..."
+  exit 1
+fi
+
+# find a bash config file based on the shell
+if [ "$SHELL" = "zsh" ]; then
+  BASH_CFG=$HOME/.zshrc
+elif [ "$SHELL" = "bash" ]; then
+  BASH_CFG=$HOME/.bashrc
+fi
+
+# check if cfg file found
+if [ -z "$BASH_CFG" ]; then
+  echo "Config file not found. Exiting..."
   exit 1
 fi
 
@@ -87,17 +100,27 @@ clone_repo() {
 
   # write new variables to the config file
   echo "export update_bash_scripts=$tools_dir/$update_script" >> $BASH_CFG
+
+  echo "Bash functtions & scripts cloned successfully!"
 }
 
 insert_functions_to_config() {
   # find all functions
   functions=$(find $INSTALL_DIR/functions -type f -name "*.sh" -exec basename {} \; | sed 's/\.sh//g')
 
+  # add an empty line to the config file
+  echo "" >> $BASH_CFG
+  echo "# Imported functions" >> $BASH_CFGv
+
+  echo "Adding functions to the config file..."
+
   # import functions to the config file
   for function in $functions
   do
     echo "source $INSTALL_DIR/functions/$function.sh" >> $BASH_CFG
   done
+
+  echo "Functions added successfully!"
 }
 
 main() {
@@ -106,7 +129,10 @@ main() {
   insert_functions_to_config
 
   # restart the shell
+  echo "Restarting the shell..."
   exec $SHELL
+
+  echo "Done!"
 }
 
 main "$@"
