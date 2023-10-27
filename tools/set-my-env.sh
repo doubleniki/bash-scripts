@@ -99,7 +99,7 @@ main() {
   insert_functions_to_config
 
   # restart the shell
-  exec -l $SHELL
+  exec $SHELL
 }
 
 main "$@"
