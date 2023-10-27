@@ -21,8 +21,15 @@ REPO=${REPO:-doubleniki/bash-scripts}
 REMOTE=${REMOTE:-https://github.com/${REPO}.git}
 BRANCH=${BRANCH:-master}
 
-# find a bash config file
-BASH_CFG=$(find $HOME -maxdepth 1 -name ".*shrc" -o -name ".*bash_profile" -o -name ".*bashrc" -o -name ".*zshrc" -o -name ".*zprofile" -o -name ".*zshenv" -o -name ".*zlogin" -o -name ".*zlogout" -o -name ".*profile" -o -name ".*login" -o -name ".*logout" | head -n 1)
+# find a bash config file based on the shell
+if [ -n "$ZSH_VERSION" ]; then
+  BASH_CFG=$HOME/.zshrc
+elif [ -n "$BASH_VERSION" ]; then
+  BASH_CFG=$HOME/.bashrc
+else
+  echo "Unknown shell. Exiting..."
+  exit 1
+fi
 
 echo "Please provide a dir for scripts or press enter to use default ($HOME/.bash-scripts):"
 read INSTALL_DIR
