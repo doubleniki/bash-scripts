@@ -72,6 +72,14 @@ clone_repo() {
   # clone the repo with bash scripts
   mkdir -p $INSTALL_DIR
   git clone $REMOTE $INSTALL_DIR
+
+  # write new variables that leads to an update script to the config file
+  tools_dir=$INSTALL_DIR/tools
+  # find find a script that has update word in its name
+  update_script=$(find $tools_dir -type f -name "*update*" -exec basename {} \; | head -n 1)
+
+  # write new variables to the config file
+  echo "export update_bash_scripts=$tools_dir/$update_script" >> $BASH_CFG
 }
 
 insert_functions_to_config() {
