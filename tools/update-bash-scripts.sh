@@ -30,15 +30,15 @@ if ! command_exists git; then
 fi
 
 # find bash-scripts dir
-BASH_SCRIPTS_DIR=$(find $HOME -maxdepth 1 -name ".bash-scripts" | head -n 1)
+BASH_SCRIPTS_DIR=$(find "$HOME" -maxdepth 1 -name ".bash-scripts" | head -n 1)
 
 # check if bash-scripts dir exists
-if ! folder_exists $BASH_SCRIPTS_DIR; then
+if ! folder_exists "$BASH_SCRIPTS_DIR"; then
   echo "bash-scripts dir does not exist. Exiting..."
   exit 1
 fi
 
-cd $BASH_SCRIPTS_DIR
+cd "$BASH_SCRIPTS_DIR" || exit 1  # cd to bash-scripts dir
 
 # check if git is initialized
 if ! git rev-parse --git-dir > /dev/null 2>&1; then
@@ -49,23 +49,23 @@ fi
 # check if git remote is set
 if ! git config --get remote.origin.url > /dev/null 2>&1; then
   echo "git remote is not set. Setting git remote..."
-  git remote add origin $REMOTE
+  git remote add origin "$REMOTE"
 fi
 
 # check if git branch is set
 if ! git branch --show-current > /dev/null 2>&1; then
   echo "git branch is not set. Setting git branch..."
-  git branch -M $BRANCH
+  git branch -M "$BRANCH"
 fi
 
 # fetch the latest changes
 echo "Fetching the latest changes..."
-git fetch origin $BRANCH
+git fetch origin "$BRANCH"
 
 # check if git pull is needed
 if ! git diff --quiet; then
   echo "git pull is needed. Pulling..."
-  git pull origin $BRANCH
+  git pull origin "$BRANCH"
 fi
 
 # tell the user that the script is done

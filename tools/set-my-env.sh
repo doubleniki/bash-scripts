@@ -68,12 +68,9 @@ set_folders() {
   personal_projects_repo=$HOME/Repo/Personal
   work_project_repo=$HOME/Repo/Work
 
-  echo "Please enter the link of the remote repository with your bash scripts:"
-  read -r remote_link
-
   # write new variables to the config file
-  echo "export PERSONAL_REPO=$personal_projects_repo" >> $BASH_CFG
-  echo "export WORK_REPO=$work_project_repo" >> $BASH_CFG
+  echo "export PERSONAL_REPO=$personal_projects_repo" >> "$BASH_CFG"
+  echo "export WORK_REPO=$work_project_repo" >> "$BASH_CFG"
 }
 
 clone_repo() {
@@ -111,15 +108,15 @@ insert_functions_to_config() {
   functions=$(find "$INSTALL_DIR"/functions -type f -name "*.sh" -exec basename {} \; | sed 's/\.sh//g')
 
   # add an empty line to the config file
-  echo "" >> $BASH_CFG
-  echo "# Imported functions" >> $BASH_CFGv
+  echo "" >> "$BASH_CFG"
+  echo "# Imported functions" >> "$BASH_CFG"
 
   echo "Adding functions to the config file..."
 
   # import functions to the config file
   for function in $functions
   do
-    echo "source $INSTALL_DIR/functions/$function.sh" >> $BASH_CFG
+    echo "source $INSTALL_DIR/functions/$function.sh" >> "$BASH_CFG"
   done
 
   echo "Functions added successfully!"
