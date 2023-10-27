@@ -50,19 +50,15 @@ if ! git branch --show-current > /dev/null 2>&1; then
   git branch -M $BRANCH
 fi
 
+# fetch the latest changes
+echo "Fetching the latest changes..."
+git fetch origin $BRANCH
+
 # check if git pull is needed
 if ! git diff --quiet; then
   echo "git pull is needed. Pulling..."
   git pull origin $BRANCH
 fi
-
-# fetch latest changes
-echo "Fetching latest changes..."
-git fetch origin $BRANCH
-
-# apply latest changes
-echo "Applying latest changes..."
-git reset --hard origin/$BRANCH
 
 # tell the user that the script is done
 echo "Done!"
