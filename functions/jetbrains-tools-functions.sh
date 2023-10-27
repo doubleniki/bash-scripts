@@ -1,4 +1,4 @@
-source ../tools/base.sh
+source ~/.bash-scripts/tools/base.sh
 
 find_tb_scripts_path() {
   # find a path in $PATH that contains ToolBox
