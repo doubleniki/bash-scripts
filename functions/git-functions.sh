@@ -1,19 +1,25 @@
+#!/bin/bash
 # Author: Nikita Saltykov
 
-ask_about_creds() {
-  echo "Please enter your name:"
-  read -r name
-  echo "Please enter your email:"
-  read -r email
+ask_about_cred() {
+  echo "Please enter your $1:"
+  read -r cred
 
-  if [ -z "$name" ] || [ -z "$email" ] #If name or email is not provided
+  if [ -z "$cred" ] #If cred is not provided
   then
-    echo "Name or email is not provided. Exiting..."
+    echo "$1 is not provided. Exiting..."
     exit 1
   fi
 
-  # return $name $email
-  echo "$name $email"
+  echo "$cred"
+  return
+}
+
+init_git() {
+  git init --quiet #Initialize git repository
+  echo "Initialized git repository"
+
+  return
 }
 
 gall() {
@@ -28,35 +34,53 @@ gall() {
     git commit -m "$message" #Commit with message
   fi
 
-  git push origin HEAD #Push to origin
+  # if --amend flag is provided, push with --force flag
+  if [ "$1" = "--amend" ]
+  then
+    git push origin HEAD --force #Push to origin
+  else
+    git push origin HEAD #Push to origin
+  fi
+
+  echo "Pushed to origin HEAD"
+
+  return
 }
 
 gcfg() {
-  if [ $# -eq 0 ] #If no arguments are provided
+  local name
+  name=$(ask_about_cred "name")
+
+  local email
+  email=$(ask_about_cred "email")
+
+  if [ -z "$name" ] || [ -z "$email" ] #If email is not provided
   then
-    credentials=$(ask_about_creds) #Ask about credentials
-    name=$(echo "$credentials" | cut -d " " -f 1) #Get name
-    email=$(echo "$credentials" | cut -d " " -f 2) #Get email
+    echo "Creds are not enough. Exiting..."
+    exit 1
   fi
 
-  if [ "$#" = "--G" ] #If --G is provided, set global config
+  echo "Provided name: $name, email: $email"
+
+  # Ask if config will be global
+  echo "Do you want to set global config? (y/n)"
+  read -r global
+
+  if [ "$global" = "y" ] #If --G is provided, set global config
   then
-    git config --global user.name "${1:-$name}"
-    git config --global user.email "${2:-$email}"
+    git config --global user.name "${name}"
+    git config --global user.email "$email"
   else
-    git config user.name "${1:-$name}"
-    git config user.email "${2:-$email}"
+    git config user.name "${name}"
+    git config user.email "$email"
   fi
+
+  return
 }
 
 ginit() {
-  git init
-
-  credentials=$(ask_about_creds) #Ask about credentials
-  name=$(echo "$credentials" | cut -d " " -f 1) #Get name
-  email=$(echo "$credentials" | cut -d " " -f 2) #Get email
-
-  gcfg "$name" "$email"
+  init_git
+  gcfg
 
   echo "Please enter the name of the main branch you want to create:"
   read -r branch_name
@@ -72,10 +96,12 @@ ginit() {
 
   if [ -n "$remote_link" ]
   then
+    git remote add origin "$remote_link"
+    git push -u origin HEAD
+
+    echo "Pushed to origin HEAD"
+  else
     echo "No remote link provided. Exiting..."
     exit 1
   fi
-
-  git add remote origin "$remote_link"
-  git push origin HEAD
 }
